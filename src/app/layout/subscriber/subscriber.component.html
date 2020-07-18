@@ -1,0 +1,197 @@
+<div class="row mt-3">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">Customer Portal</div>
+      <div class="card-body">
+        <ngb-tabset (tabChange)="checkBalance()">
+          <ngb-tab title="Auction Plans">
+            <ng-template ngbTabContent>
+              <div class="card mb-3">
+                <table class="card-body table">
+                  <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Amount</th>
+                    <th>Duration</th>
+                    <th>GeneratedAmount</th>
+                    <th>SubscriberAmount</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let plan of plans; let i=index">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td>{{ plan.groupId }}</td>
+                    <td>{{ plan.fixedAmount }}</td>
+                    <td>{{ plan.duration }}</td>
+                    <td>{{ plan.generatedAmount }}</td>
+                    <td>{{ plan.subscriberAmount }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="List of Subscribers">
+            <ng-template ngbTabContent>
+              <div class="card mb-3">
+                <table class="card-body table">
+                  <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Plan Id</th>
+                    <th>Subscriber Id</th>
+                    <th>Subscriber Name</th>
+                    <th>Balance</th>
+                    <th>BidAmount</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let subscriber of subscribers; let i=index">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td>{{ subscriber.groupId }}</td>
+                    <td>{{ subscriber.subscriberId}}</td>
+                    <td>{{ subscriber.name }}</td>
+                    <td>{{ subscriber.balance }}</td>
+                    <td>{{ subscriber.bidAmount }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Pay for Auction">
+            <ng-template ngbTabContent>
+              <div class="card mb-3 col-md-6">
+                <div class="card-body">
+                  <form (validSubmit)="payMonthly()" [formGroup]="payMonthlyForm" class="form-horizontal">
+                    <div class="form-group row ">
+                      <label for="exampleFormControlSelect1">Select Auction Plan</label>
+                      <select class="form-control input-underline input-lg" formControlName="planId"
+                              id="exampleFormControlSelect1" name="loginType">
+                        <option>select</option>
+                        <ng-container *ngFor="let plan of plans">
+                          <option *ngIf="plan.groupId === loginUser.groupId"
+                                  [value]="plan.groupId">{{ plan.groupId }}</option>
+                        </ng-container>
+                      </select>
+                    </div>
+
+                    <!--                            <button (click)="onReset()" class="btn btn-default" type="button">Reset</button>-->
+                    <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                  </form>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Bid for Auction">
+            <ng-template ngbTabContent>
+              <div class="card mb-3 col-md-6">
+                <div class="card-body">
+                  <form (validSubmit)="bidAuction()" [formGroup]="bidMonthlyForm" class="form-horizontal">
+                    <div class="form-group row ">
+                      <label for="bidFormControlSelect1">Select Auction Plan</label>
+                      <select class="form-control input-underline input-lg" formControlName="planId" id="bidFormControlSelect1"
+                              name="loginType">
+                        <option>select</option>
+                        <ng-container *ngFor="let plan of plans">
+                          <option *ngIf="plan.groupId === loginUser.groupId"
+                                  [value]="plan.groupId">{{ plan.groupId }}</option>
+                        </ng-container>
+                      </select>
+                    </div>
+                    <div class="form-group row">
+                      <label for="bidAmount"></label>
+                      <input aria-describedby="helpId" class="form-control" formControlName="bidAmount" id="bidAmount"
+                             name="bidAmount" placeholder="Enter Bid Amount"
+                             type="text">
+                    </div>
+
+                    <!--                            <button (click)="onReset()" class="btn btn-default" type="button">Reset</button>-->
+                    <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                  </form>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Get Winner">
+            <ng-template ngbTabContent>
+              <div class="row">
+                <div class="card mb-3 col-md-6">
+                  <div class="card-body">
+                    <form (validSubmit)="getWinner()" [formGroup]="payMonthlyForm" class="form-horizontal">
+                      <div class="form-group row ">
+                        <label for="winnerFormControlSelect1">Select Auction Plan</label>
+                        <select class="form-control input-underline input-lg" formControlName="planId"
+                                id="winnerFormControlSelect1" name="loginType">
+                          <option>select</option>
+                          <ng-container *ngFor="let plan of plans">
+                            <option *ngIf="plan.groupId === loginUser.groupId"
+                                    [value]="plan.groupId">{{ plan.groupId }}</option>
+                          </ng-container>
+                        </select>
+                      </div>
+                      <!--                            <button (click)="onReset()" class="btn btn-default" type="button">Reset</button>-->
+                      <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                    </form>
+                  </div>
+                </div>
+                <div class="card mb-3 p-2 col-md-6">
+                  <div class="card-body">
+                    <table *ngIf="winner" class="table table-bordered">
+                      <thead>
+                      <tr>
+                        <td>subscriberID</td>
+                        <td>subscriberName</td>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td>{{ winner.subscriberId  }}</td>
+                        <td>{{ winner.name }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                    <h4 *ngIf="!winner">No data Found</h4>
+                  </div>
+
+                </div>
+              </div>
+
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Check Balance" >
+            <ng-template ngbTabContent>
+              <div class="row">
+                <div class="card mb-3 p-2 col-md-6">
+                  <p class="card-header"> Statement</p>
+                  <div class="card-body">
+                    <table class="table table-bordered">
+                      <thead>
+                      <tr>
+                        <td>subscriberID</td>
+                        <td>subscriberName</td>
+                        <td>bidAmount</td>
+                        <td>Balance</td>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td>{{ loginCustomer.subscriberId  }}</td>
+                        <td>{{ loginCustomer.name }}</td>
+                        <td>{{ loginCustomer.bidAmount }}</td>
+                        <td>{{ loginCustomer.balance }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+              </div>
+
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,208 @@
+<div class="row mt-3">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">Admin Portal</div>
+            <div class="card-body">
+                <ngb-tabset>
+                    <ngb-tab title="Auction Plans">
+                        <ng-template ngbTabContent>
+                            <div class="card mb-3">
+                                <table class="card-body table">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>ID</th>
+                                        <th>Amount</th>
+                                        <th>Duration</th>
+                                        <th>GeneratedAmount</th>
+                                        <th>SubscriberAmount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let plan of plans; let i=index">
+                                        <th scope="row">{{ i+1 }}</th>
+                                        <td>{{ plan.groupId }}</td>
+                                        <td>{{ plan.fixedAmount }}</td>
+                                        <td>{{ plan.duration }}</td>
+                                        <td>{{ plan.generatedAmount }}</td>
+                                        <td>{{ plan.subscriberAmount }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </ngb-tab>
+                    <ngb-tab *ngIf="loginUser.loginType === 'admin'">
+                        <ng-template ngbTabTitle>Add Plan</ng-template>
+                        <ng-template ngbTabContent>
+                            <div class="col-sm-12 pl-0">
+                                <div class="card text-dark bg-light mb-3">
+                                    <div class="card-body">
+                                        <form (validSubmit)="addPlan()" [formGroup]="formGroup"  class="form-horizontal">
+                                            <div class="form-group row">
+                                                <label class="control-label col-md-3" for="en_MedicineId">Auction Plan Id</label>
+                                                <div class="col-md-8">
+                                                    <input
+                                                        class="form-control"
+                                                        formControlName="planId"
+                                                        id="en_MedicineId"
+                                                        name="planId"
+                                                        placeholder="Enter Plan Id" type="text"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-md-3" for="en_MedicineName">Auction Plan Amount</label>
+                                                <div class="col-md-8">
+                                                    <input
+                                                        class="form-control"
+                                                        formControlName="amount"
+                                                        id="en_MedicineName"
+                                                        name="amount"
+                                                        placeholder="Enter Auction Amount" type="text"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-md-3" for="en_mandate">Duration(in Months)</label>
+                                                <div class="col-md-8">
+                                                    <input
+                                                        class="form-control col-md-8"
+                                                        formControlName="duration"
+                                                        id="en_mandate"
+                                                        name="duration"
+                                                        placeholder="Enter Auction Plan Duration" type="text"
+                                                    />
+                                                </div>
+                                            </div>
+                                          <button (click)="onReset()" class="btn btn-default" type="button">Reset</button>
+                                          <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </ng-template>
+                    </ngb-tab>
+                    <ngb-tab title="List of Subscribers" *ngIf="loginUser.loginType === 'admin'">
+                        <ng-template ngbTabContent>
+                            <div class="card mb-3">
+                                <table class="card-body table">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Plan Id</th>
+                                        <th>Subscriber Id</th>
+                                        <th>Subscriber Name</th>
+                                        <th>Balance</th>
+                                        <th>BidAmount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let subscriber of subscribers; let i=index">
+                                        <th scope="row">{{ i+1 }}</th>
+                                        <td>{{ subscriber.groupId }}</td>
+                                        <td>{{ subscriber.subscriberId}}</td>
+                                        <td>{{ subscriber.name }}</td>
+                                        <td>{{ subscriber.balance }}</td>
+                                        <td>{{ subscriber.bidAmount }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </ngb-tab>
+                  <ngb-tab title="Get Winner">
+                    <ng-template ngbTabContent >
+                      <div class="row">
+                        <div class="card mb-3 col-md-6">
+                          <div class="card-body">
+                            <form (validSubmit)="getWinner()" [formGroup]="payMonthlyForm"  class="form-horizontal">
+                              <div class="form-group row ">
+                                <label for="winnerFormControlSelect1">Select Auction Plan</label>
+                                <select class="form-control input-underline input-lg" id="winnerFormControlSelect1"  name="loginType" formControlName="planId">
+                                  <option>select</option>
+                                  <ng-container *ngFor="let plan of plans">
+                                    <option  [value]="plan.groupId">{{ plan.groupId }}</option>
+                                  </ng-container>
+                                </select>
+                              </div>
+                              <!--                            <button (click)="onReset()" class="btn btn-default" type="button">Reset</button>-->
+                              <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                            </form>
+                          </div>
+                        </div>
+                        <div class="card mb-3 p-2 col-md-6">
+                          <div class="card-body">
+                            <table class="table table-bordered" *ngIf="winner" >
+                              <thead>
+                              <tr>
+                                <td>subscriberID</td>
+                                <td>subscriberName</td>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                <td>{{ winner.subscriberId  }}</td>
+                                <td>{{ winner.name }}</td>
+                              </tr>
+                              </tbody>
+                            </table>
+                            <h4 *ngIf="!winner">No data Found</h4>
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </ng-template>
+                  </ngb-tab>
+                  <ngb-tab title="Reward">
+                    <ng-template ngbTabContent >
+                      <div class="row">
+                        <div class="card mb-3 col-md-6">
+                          <p class="card-header mt-2">Reward for Winner</p>
+                          <div class="card-body">
+                            <form (validSubmit)="reward()" [formGroup]="payMonthlyForm"  class="form-horizontal">
+                              <div class="form-group row ">
+                                <label for="rewardwinner">Select Auction Plan</label>
+                                <select class="form-control input-underline input-lg" id="rewardwinner"  name="loginType" formControlName="planId">
+                                  <option>select</option>
+                                  <ng-container *ngFor="let plan of plans">
+                                    <option  [value]="plan.groupId" *ngIf="plan.generatedAmount !== '0'">{{ plan.groupId }}</option>
+                                  </ng-container>
+                                </select>
+                              </div>
+                              <!--                            <button (click)="onReset()" class="btn btn-default" type="button">Reset</button>-->
+                              <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                            </form>
+                          </div>
+                        </div>
+                        <div class="card mb-3 col-md-6">
+                          <p class="card-header mt-2">Reward for All Subscribers</p>
+                          <div class="card-body">
+                            <form (validSubmit)="rewardAll()" [formGroup]="payMonthlyForm"  class="form-horizontal">
+                              <div class="form-group row ">
+                                <label for="subscriberslist">Select Auction Plan</label>
+                                <select class="form-control input-underline input-lg" id="subscriberslist"  name="loginType" formControlName="planId">
+                                  <option>select</option>
+                                  <ng-container *ngFor="let plan of plans">
+                                    <option [value]="plan.groupId" *ngIf="plan.generatedAmount !== '0'">{{ plan.groupId }}</option>
+                                  </ng-container>
+                                </select>
+                              </div>
+                              <!--                            <button (click)="onReset()" class="btn btn-default" type="button">Reset</button>-->
+                              <button class="btn btn-primary pull-right" type="submit">Submit</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+
+                    </ng-template>
+                  </ngb-tab>
+                </ngb-tabset>
+            </div>
+        </div>
+    </div>
+
+</div>

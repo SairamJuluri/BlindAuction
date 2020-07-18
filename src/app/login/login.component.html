@@ -1,0 +1,40 @@
+
+<section class="login-block" >
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 login-sec">
+        <h2 class="text-center">Blind Auction</h2>
+        <form #f="ngForm" (ngSubmit)="onLoggedin(f)" class="login-form">
+          <p *ngFor="let alert of alerts">
+            <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+          </p>
+          <div class="form-content">
+            <div class="form-group">
+              <label for="exampleFormControlSelect1">Select LoginType</label>
+              <select class="form-control input-underline input-lg" #loginType="ngModel" id="exampleFormControlSelect1" [(ngModel)]="user.loginType" name="loginType">
+                <option>select</option>
+                <option *ngFor="let login of loginTypes" [value]="login">{{ login }}</option>
+              </select>
+            </div>
+            <div class="form-group" *ngIf="user.loginType === 'customer'">
+              <label for="userId">Provide your Customer ID</label>
+              <input type="text" #userId [(ngModel)]="user.userId" class="form-control input-underline input-lg" id="userId" placeholder="Enter Customer ID" name="userId">
+            </div>
+
+            <div class="form-group" *ngIf="user.loginType === 'admin'">
+              <label for="password">Provide admin Password</label>
+              <input type="password" #password [(ngModel)]="user.password" class="form-control input-underline input-lg" id="password" placeholder="Password" name="password">
+            </div>
+          </div>
+          <button class="btn rounded-btn" type="submit"> Log in </button>
+          &nbsp;
+          <a class="btn rounded-btn" [routerLink]="['/signup']">Register</a>
+        </form>
+        <div class="copy-text">Created with <i class="fa fa-heart"></i> by <a href="http://grafreez.com">Grafreez.com</a></div>
+      </div>
+      <div class="col-md-8 banner-sec">
+
+      </div>
+    </div>
+  </div>
+</section>

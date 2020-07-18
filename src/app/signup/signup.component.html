@@ -1,0 +1,43 @@
+<section class="login-block" >
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 login-sec">
+        <h2 class="text-center">Blind Auction</h2>
+        <form [formGroup]="formGroup"  (validSubmit)="singUp()" autocomplete="off">
+          <p *ngFor="let alert of alerts">
+            <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+          </p>
+          <div class="form-content">
+            <div class="form-group">
+              <label for="exampleFormControlSelect1">Select Plan to Enroll !</label>
+              <select class="form-control input-underline input-lg"  id="exampleFormControlSelect1" formControlName="groupId" name="groupId">
+                <option *ngFor="let login of plans" [value]="login.groupId">{{ login.groupId }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <ngb-alert [type]="'danger'" *ngIf="subscriberIds.includes(userId.value)">This ID is already taken.</ngb-alert>
+              <label for="userId">Provide Customer ID</label>
+              <input type="text" class="form-control input-underline input-lg" id="userId" #userId placeholder="Customer ID" name="subscriberId" formControlName="subscriberId">
+            </div>
+            <div class="form-group">
+              <label for="name"> Provide Customer Name</label>
+              <input type="text" class="form-control input-underline input-lg" id="name" placeholder="Customer Name" name="subscriberName" formControlName="subscriberName">
+            </div>
+
+            <div class="form-group">
+              <label for="location">Enter Your Wallet Amount</label>
+              <input type="text" class="form-control input-underline input-lg" id="location" placeholder="Wallet Amount"  name="walletAmount" formControlName="walletAmount">
+            </div>
+          </div>
+          <button class="btn rounded-btn" type="submit" [disabled]="subscriberIds.includes(userId.value)"> Register </button>&nbsp;
+          <a class="btn rounded-btn" [routerLink]="['/login']"> Log in </a>
+        </form>
+        <div class="copy-text">Created with <i class="fa fa-heart"></i> by <a href="http://grafreez.com">Grafreez.com</a></div>
+      </div>
+      <div class="col-md-8 banner-sec">
+
+      </div>
+    </div>
+  </div>
+</section>
+
